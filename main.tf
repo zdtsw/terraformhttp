@@ -29,10 +29,8 @@ data "http" "location" {
     }
 }
 
-data "null_data_source" "locationwoeid" {
-    inputs = {
-  	url = "https://www.metaweather.com/api/location/${jsondecode(data.http.location.body)[0]["woeid"]}"
-    }
+locals {
+   locationwoeid = "https://www.metaweather.com/api/location/${jsondecode(data.http.location.body)[0]["woeid"]}"
 }
 
 /* Debug info
@@ -43,7 +41,7 @@ data "null_data_source" "locationwoeid" {
 
 
 data "http" "weather" {
-    url = data.null_data_source.locationwoeid.outputs["url"]
+    url = local.locationwoeid
     request_headers = {
         "Accept" = "application/json"
     }
